@@ -106,16 +106,14 @@ public class Main {
             System.out.println("===> ");
             while ((count = bis.read(buff, 0, buff.length)) != -1) {
                 _currentIdx+= 4;
-                for(int i=0;i<4;i++){
-//                    System.out.println((int)buff[i]);
-                }
-//                System.out.println(bis.available()+" > "+_currentIdx);
-
-//                System.out.println("=> "+_currentIdx);
-//                System.out.println(new String(buff));
+//                for(int i=0;i<4;i++){
+////                    System.out.println((int)buff[i]);
+//                }
                 if(!isFirstFourCC){
                     fileFourCC = new String(buff);
                     int remlength = bis.available();
+
+                    // This image stream CHUNK contains image width and height
                     if(fileFourCC.equals("VP8 ") && remlength > 9){
                         byte b = (byte)bis.read();
                         int chunkSize = getUInt32ForWebp(b);
@@ -131,6 +129,8 @@ public class Main {
                             System.out.println((int)_metaData[i]);
                         }
                         System.out.println(fourthByte + " , "+ fifthByte + " , " + sixthByte);
+
+                        // ??????
                         if(fourthByte!= 157 || fifthByte!=1 || sixthByte != 42){
                             // Webp image dimension metaData can not be found
                             System.out.println("returning");
@@ -156,9 +156,12 @@ public class Main {
         return null;
     }
 
+    // ????
     public static int getUInt16ForWebp(byte b1, byte b2){
         return b2 << 8 & '\uff00' | b1 & 255;
     }
+
+    // ???
     public static int getUInt32ForWebp(byte b){
         int i= b & 255 | b << 8 & '\uff00' | b << 16 & 16711680 | b << 24 & -16777216;
         return b & 255 | b << 8 & '\uff00' | b << 16 & 16711680 | b << 24 & -16777216;
